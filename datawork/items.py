@@ -15,7 +15,9 @@ class DataworkItem(scrapy.Item):
 
 
 class PageItem(scrapy.Item):
+    host = scrapy.Field()
     url = scrapy.Field()
+    file = scrapy.Field()
     title = scrapy.Field()
     description = scrapy.Field()
     keywords = scrapy.Field()
