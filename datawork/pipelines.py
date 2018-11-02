@@ -35,7 +35,6 @@ class PageItemPipeline(object):
             st_url_id = self.db.insert_url(url)
         else:
             st_url_id = item_url[0]
-            print(type(st_url_id),'============')
         for u in item['local_urls_set']:
             # 遍历该页面的出链接
             res = self.db.select_url(u)
@@ -45,7 +44,6 @@ class PageItemPipeline(object):
                 # 同时插入该关系
                 self.db.insert_url_out(st_url_id, ed_url_id)
             else:
-                print(res)
                 ed_url_id = res[0]
                 # 同时插入该关系
                 self.db.insert_url_out(st_url_id, ed_url_id)
