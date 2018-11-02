@@ -87,7 +87,7 @@ class PageItemPipeline(object):
     def process_content(self, item):
         body = item['content']
         # 删除脚本
-        script = re.compile('<script[\s\S]*?</script>')
+        script = re.compile('(<script[\s\S]*?</script>)|(<style[\s\S]*?</style>)')
         body = script.sub('', body)
         # 删除全部标签 <>
         tag = re.compile('(</?[^<>]*>)|(<!--[\s\S]*?-->)|(//.*\s*?\n)')

@@ -44,7 +44,6 @@ class SqlTool(object):
     def insert_page(self, url_id, content):
         try:
             with self.connection.cursor() as cursor:
-                print("插入内容", (url_id, content))
                 cursor.execute(SqlTool.insert_page_sql, (url_id, content))
                 self.connection.commit()
         except Exception as e:
@@ -55,7 +54,6 @@ class SqlTool(object):
     def insert_url_out(self, st_url_id, ed_url_id):
         try:
             with self.connection.cursor() as cursor:
-                print("插入内容", (st_url_id, ed_url_id))
                 cursor.execute(SqlTool.insert_url_out_sql, (st_url_id, ed_url_id))
                 self.connection.commit()
         except Exception as e:
