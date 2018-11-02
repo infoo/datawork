@@ -45,10 +45,10 @@ ROBOTSTXT_OBEY = True
 
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
-SPIDER_MIDDLEWARES = {
-    'scrapy.spidermiddlewares.offsite.OffsiteMiddleware': None
-    #    'datawork.middlewares.DataworkSpiderMiddleware': 543,
-}
+# SPIDER_MIDDLEWARES = {
+#   'scrapy.spidermiddlewares.offsite.OffsiteMiddleware': None
+#    'datawork.middlewares.DataworkSpiderMiddleware': 543,
+#}
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
@@ -65,7 +65,7 @@ SPIDER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'datawork.pipelines.PageItemPipeline': 300,
+'datawork.pipelines.PageItemPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

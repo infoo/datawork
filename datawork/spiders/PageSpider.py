@@ -1,12 +1,13 @@
 import scrapy
 from datawork.items import PageItem
 from urllib3.util import Url, parse_url
-import re
 
 
 class PageSpider(scrapy.Spider):
     name = "pageSpider"
-    allowed_domains = []
+    allowed_domains = ['financeun.com', '21so.com', 'afinance.cn', '10jqka.com.cn', 'zqcn.com.cn', 'chinavalue.net',
+                       'eeo.com.cn', 'ce.cn',
+                       'jrj.com.cn', 'cnfol.com', 'nbd.com.cn', 'sinoins.com']
 
     # 请求入口
     def start_requests(self):
@@ -20,7 +21,7 @@ class PageSpider(scrapy.Spider):
         keywords = response.xpath('//head/meta[@name="keywords"]/@content').extract()
         description = response.xpath('//head/meta[@name="description"]/@content').extract()
         all_hrefs = response.xpath('//body//@href').extract()
-        content = response.xpath('//body').extract()
+        content = response.xpath('//html').extract()
         item = PageItem()
         item['url'] = response.url
         item['local_urls_set'] = set()
@@ -54,4 +55,3 @@ class PageSpider(scrapy.Spider):
             yield scrapy.Request(url, callback=self.parse)
         for local_url in item['local_urls_set']:
             yield scrapy.Request(local_url, callback=self.parse)
-
