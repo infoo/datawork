@@ -15,3 +15,7 @@ CREATE TABLE IF NOT EXISTS page (
   url_id  INT,
   content TEXT
 );
+create table if not exists seg(
+  id int primary key auto_increment,
+  seg varchar(32)
+);

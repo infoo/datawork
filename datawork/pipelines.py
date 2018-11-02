@@ -7,6 +7,8 @@
 import os
 import re
 from datawork.other.sqltool import getConnection, SqlTool
+from datawork.other.segtool import SegTool
+import threading
 
 
 class DataworkPipeline(object):
@@ -96,3 +98,8 @@ class PageItemPipeline(object):
         # 去掉非汉字 非字母 以及 非换行 和 非小数点
         other = re.compile('[^\u2E80-\u9FFF\w\n\.]')
         item['content'] = other.sub('', body)
+        th = threading.Thread(target=self.process_content_jieba_cut, args=(body,))
+        th.start()
+
+    def process_content_jieba_cut(self, body):
+        SegTool.cut_and_insert_to_seg(body)

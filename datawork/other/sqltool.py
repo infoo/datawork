@@ -19,6 +19,8 @@ class SqlTool(object):
     insert_page_sql = 'insert into page(url_id, content) values(%s,%s)'
     insert_url_out_sql = 'insert into url_out(st_url_id, ed_url_id) values(%s,%s)'
     select_url_sql = 'select id,url from url where url=%s'
+    insert_seg_sql = 'insert into seg(seg) values(%s)'
+    select_seg_sql = 'select id,seg from seg where seg=%s'
 
     def __init__(self, connection):
         self.connection = connection
@@ -56,6 +58,18 @@ class SqlTool(object):
             with self.connection.cursor() as cursor:
                 cursor.execute(SqlTool.insert_url_out_sql, (st_url_id, ed_url_id))
                 self.connection.commit()
+        except Exception as e:
+            print(e)
+            self.connection.rollback()
+
+    def insert_seg(self, seg):
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute(SqlTool.select_seg_sql, (seg,))
+                result = cursor.fetchone()
+                if result is None:
+                    cursor.execute(SqlTool.insert_seg_sql, (seg,))
+                    self.connection.commit()
         except Exception as e:
             print(e)
             self.connection.rollback()
