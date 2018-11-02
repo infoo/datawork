@@ -16,8 +16,8 @@ def getConnection():
 
 class SqlTool(object):
     insert_url_sql = 'insert into url(url) values(%s)'
-    insert_page_sql = 'insert into page(url_id, content) values(%d,%s)'
-    insert_url_out_sql = 'insert into url_out(st_url_id, ed_url_id) values(%d,%d)'
+    insert_page_sql = 'insert into page(url_id, content) values(%s,%s)'
+    insert_url_out_sql = 'insert into url_out(st_url_id, ed_url_id) values(%s,%s)'
     select_url_sql = 'select id,url from url where url=%s'
 
     def __init__(self, connection):
@@ -33,6 +33,7 @@ class SqlTool(object):
         except:
             self.connection.rollback()
 
+    # 查询该url 是否存在
     def select_url(self, url):
         with self.connection.cursor() as cursor:
             cursor.execute(SqlTool.select_url_sql, (url,))
@@ -43,22 +44,23 @@ class SqlTool(object):
     def insert_page(self, url_id, content):
         try:
             with self.connection.cursor() as cursor:
+                print("插入内容", (url_id, content))
                 cursor.execute(SqlTool.insert_page_sql, (url_id, content))
                 self.connection.commit()
-        except:
+        except Exception as e:
+            print(e)
             self.connection.rollback()
 
     # 向表 url_out 中插入数据
     def insert_url_out(self, st_url_id, ed_url_id):
         try:
             with self.connection.cursor() as cursor:
+                print("插入内容", (st_url_id, ed_url_id))
                 cursor.execute(SqlTool.insert_url_out_sql, (st_url_id, ed_url_id))
                 self.connection.commit()
-        except:
+        except Exception as e:
+            print(e)
             self.connection.rollback()
 
     def __del__(self):
         self.connection.close()
-
-
-

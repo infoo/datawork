@@ -29,10 +29,13 @@ class PageItemPipeline(object):
     def insert_item_toMySQL(self, item):
         st_url_id = -1
         url = item['url']
-
-        if self.db.select_url(url) is None:
+        item_url = self.db.select_url(url)
+        if item_url is None:
             # 如果该url 不在数据库则插入
             st_url_id = self.db.insert_url(url)
+        else:
+            st_url_id = item_url[0]
+            print(type(st_url_id),'============')
         for u in item['local_urls_set']:
             # 遍历该页面的出链接
             res = self.db.select_url(u)
@@ -42,7 +45,8 @@ class PageItemPipeline(object):
                 # 同时插入该关系
                 self.db.insert_url_out(st_url_id, ed_url_id)
             else:
-                ed_url_id = res['id']
+                print(res)
+                ed_url_id = res[0]
                 # 同时插入该关系
                 self.db.insert_url_out(st_url_id, ed_url_id)
 
@@ -55,13 +59,12 @@ class PageItemPipeline(object):
                 # 同时插入该关系
                 self.db.insert_url_out(st_url_id, ed_url_id)
             else:
-                ed_url_id = res['id']
+                ed_url_id = res[0]
                 # 同时插入该关系
                 self.db.insert_url_out(st_url_id, ed_url_id)
 
         content = item['content']
         self.db.insert_page(st_url_id, content)
-
 
     # 写到硬盘
     def write_item_toDisk(self, item):
@@ -79,7 +82,6 @@ class PageItemPipeline(object):
                 fp.write(local_url.encode('utf8') + b'\n')
             for external_url in item['external_urls_set']:
                 fp.write(external_url.encode('utf8') + b'\n')
-
 
     ##处理content
     def process_content(self, item):
