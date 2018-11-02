@@ -17,10 +17,10 @@ class PageItemPipeline(object):
     def process_item(self, item, spider):
         body = item['content']
         # 删除脚本
-        script = re.compile('<script[\s\S]*</script>')
+        script = re.compile('<script[\s\S]*?</script>')
         body = script.sub('', body)
         # 删除全部标签 <>
-        tag = re.compile('(<[^<>]*>)|(<!--[\s\S]*?-->)|(//.*\s*?\n)')
+        tag = re.compile('(</?[^<>]*>)|(<!--[\s\S]*?-->)|(//.*\s*?\n)')
         body = tag.sub('', body)
         # 过滤换行,将多次换行改为1次换行
         sp = re.compile('[\s]{2,}')  # 大于等于1次换行
