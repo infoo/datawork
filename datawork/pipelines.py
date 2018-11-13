@@ -8,7 +8,6 @@ import os
 import re
 from datawork.other.sqltool import getConnection, SqlTool
 from datawork.other.segtool import SegTool
-import threading
 
 
 class DataworkPipeline(object):
@@ -25,7 +24,9 @@ class PageItemPipeline(object):
     # 默认执行的方法
     def process_item(self, item, spider):
         self.process_content(item)
-        self.insert_item_toMySQL(item)
+        self.write_item_toDisk(item)
+        # 写入数据库速度较慢
+        # self.insert_item_toMySQL(item)
 
     # 写到数据库
     def insert_item_toMySQL(self, item):
@@ -73,13 +74,17 @@ class PageItemPipeline(object):
             os.makedirs(fileDir)
         filepath = fileDir + '/' + item['file']
         with open(filepath, 'ab') as fp:
+            fp.write('[url]'.encode('utf8')+b'\n')
             fp.write(item['url'].encode('utf8') + b'\n')
-            fp.write(item['title'].encode('utf8') + b'\n')
-            fp.write(item['keywords'].encode('utf8') + b'\n')
-            fp.write(item['description'].encode('utf8') + b'\n')
+            #fp.write(item['title'].encode('utf8') + b'\n')
+            #fp.write(item['keywords'].encode('utf8') + b'\n')
+            #fp.write(item['description'].encode('utf8') + b'\n')
+            fp.write('[content]'.encode('utf8') + b'\n')
             fp.write(item['content'].encode('utf8') + b'\n')
+            fp.write('[local_urls_set]'.encode('utf8') + b'\n')
             for local_url in item['local_urls_set']:
                 fp.write(local_url.encode('utf8') + b'\n')
+            fp.write('[external_urls_set]'.encode('utf8') + b'\n')
             for external_url in item['external_urls_set']:
                 fp.write(external_url.encode('utf8') + b'\n')
 
@@ -98,8 +103,6 @@ class PageItemPipeline(object):
         # 去掉非汉字 非字母 以及 非换行 和 非小数点
         other = re.compile('[^\u2E80-\u9FFF\w\n\.]')
         item['content'] = other.sub('', body)
-        th = threading.Thread(target=self.process_content_jieba_cut, args=(body,))
-        th.start()
 
     def process_content_jieba_cut(self, body):
         SegTool.cut_and_insert_to_seg(body)
